@@ -95,11 +95,12 @@ func (b *BinaryWriter) Float64(tmp float64){
 }
 
 func (b *BinaryWriter) UTF8Fixed(tmp string){
-	panic("UTF8Fixed is not implemented.")
+	b.outWriter.Write([]byte(tmp))
 	
 }
 func (b *BinaryWriter) UTF8Null(tmp string){
-	panic("UTF8Null is not implemented.")
+	b.outWriter.Write([]byte(tmp))
+	b.Uint8(0)
 }
 
 func (b *BinaryWriter) UTF16Fixed(tmp string){

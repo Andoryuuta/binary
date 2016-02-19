@@ -139,18 +139,22 @@ func (b *BinaryReader) UTF8Fixed(size int) string {
 func (b *BinaryReader) UTF8Null() string {
 	//Create the temp buf to hold our char
 	tmpBuf := make([]byte, 1)
-	tmpBuf[0] = 0xFF
 	
 	//Create a slice of bytes to hold our output
 	var out []byte
 
 	//Loop while tmpChar is not NULL
-	for tmpBuf[0] != 0 {
+	for {
 		n, err := io.ReadFull(b.inReader, tmpBuf)
 		if err != nil {
 			panic(err)
 		} else if n < 1 {
 			panic("UTF8Null: io.ReadFull didn't read any bytes!")
+		}
+		
+		//Break on NULL byte
+		if tmpBuf[0] == 0{
+			break
 		}
 		
 		//Append the byte
