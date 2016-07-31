@@ -6,107 +6,113 @@ import (
 	"math"
 )
 
-type BinaryWriter struct{
-	outWriter  io.Writer
+type BinaryWriter struct {
+	outWriter io.Writer
 	byteOrder binary.ByteOrder
 }
 
-func NewBinaryWriter(writer io.Writer, byteOrder binary.ByteOrder) *BinaryWriter{
-	return &BinaryWriter{writer, byteOrder}
+func NewBinaryWriter(writer io.Writer, binByteOrder ByteOrder) *BinaryWriter {
+	var tmpByteOrder binary.ByteOrder
+	if binByteOrder == BigEndian {
+		tmpByteOrder = binary.BigEndian
+	} else {
+		tmpByteOrder = binary.LittleEndian
+	}
+	return &BinaryWriter{writer, tmpByteOrder}
 }
 
-func (b *BinaryWriter) SetLittleEndian(){
+func (b *BinaryWriter) SetLittleEndian() {
 	b.byteOrder = binary.LittleEndian
 }
-func (b *BinaryWriter) SetBigEndian(){
+func (b *BinaryWriter) SetBigEndian() {
 	b.byteOrder = binary.BigEndian
 }
 
-func (b *BinaryWriter) Uint8(tmp uint8){
+func (b *BinaryWriter) Uint8(tmp uint8) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Uint16(tmp uint16){
+func (b *BinaryWriter) Uint16(tmp uint16) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Uint32(tmp uint32){
+func (b *BinaryWriter) Uint32(tmp uint32) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Uint64(tmp uint64){
+func (b *BinaryWriter) Uint64(tmp uint64) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Int8(tmp int8){
+func (b *BinaryWriter) Int8(tmp int8) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Int16(tmp int16){
+func (b *BinaryWriter) Int16(tmp int16) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Int32(tmp int32){
+func (b *BinaryWriter) Int32(tmp int32) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Int64(tmp int64){
+func (b *BinaryWriter) Int64(tmp int64) {
 	err := binary.Write(b.outWriter, b.byteOrder, &tmp)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Float32(tmp float32){
+func (b *BinaryWriter) Float32(tmp float32) {
 	tmpUint32 := math.Float32bits(tmp)
 	err := binary.Write(b.outWriter, b.byteOrder, &tmpUint32)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) Float64(tmp float64){
+func (b *BinaryWriter) Float64(tmp float64) {
 	tmpUint64 := math.Float64bits(tmp)
 	err := binary.Write(b.outWriter, b.byteOrder, &tmpUint64)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 }
 
-func (b *BinaryWriter) UTF8Fixed(tmp string){
+func (b *BinaryWriter) UTF8Fixed(tmp string) {
 	b.outWriter.Write([]byte(tmp))
-	
+
 }
-func (b *BinaryWriter) UTF8Null(tmp string){
+func (b *BinaryWriter) UTF8Null(tmp string) {
 	b.outWriter.Write([]byte(tmp))
 	b.Uint8(0)
 }
 
-func (b *BinaryWriter) UTF16Fixed(tmp string){
+func (b *BinaryWriter) UTF16Fixed(tmp string) {
 	panic("UTF16Fixed is not implemented.")
 }
 
-func (b *BinaryWriter) UTF16Null(tmp string){
+func (b *BinaryWriter) UTF16Null(tmp string) {
 	panic("UTF16Null is not implemented.")
 }

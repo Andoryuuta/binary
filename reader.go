@@ -1,4 +1,4 @@
-﻿package binary
+package binary
 
 import (
 	"bytes"
@@ -12,13 +12,19 @@ type BinaryReader struct {
 	byteOrder binary.ByteOrder
 }
 
-func NewBinaryReader(reader io.Reader, byteOrder binary.ByteOrder) *BinaryReader {
-	return &BinaryReader{reader, byteOrder}
+func NewBinaryReader(reader io.Reader, binByteOrder ByteOrder) *BinaryReader {
+	var tmpByteOrder binary.ByteOrder
+	if binByteOrder == BigEndian {
+		tmpByteOrder = binary.BigEndian
+	} else {
+		tmpByteOrder = binary.LittleEndian
+	}
+	return &BinaryReader{reader, tmpByteOrder}
 }
 
-func NewBinaryReaderFromBytes(inputBytes []byte, byteOrder binary.ByteOrder) *BinaryReader {
+func NewBinaryReaderFromBytes(inputBytes []byte, binByteOrder ByteOrder) *BinaryReader {
 	inReader := bytes.NewReader(inputBytes)
-	return NewBinaryReader(inReader, byteOrder)
+	return NewBinaryReader(inReader, binByteOrder)
 }
 
 func (b *BinaryReader) SetLittleEndian() {
@@ -121,25 +127,25 @@ func (b *BinaryReader) Float64() float64 {
 //Reads in a UTF8 fixed length string.
 func (b *BinaryReader) UTF8Fixed(size int) string {
 	out := make([]byte, size)
-	
+
 	n, err := io.ReadFull(b.inReader, out)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	} else if n != size {
 		panic("UTF8Fixed: io.ReadFull couldn't read the full size given.")
 	}
-	
+
 	return string(out)
-	
+
 	return "UTF8Fixed is not implemented."
-	
+
 }
 
 //Reads in a UTF8 null terminated string.
 func (b *BinaryReader) UTF8Null() string {
 	//Create the temp buf to hold our char
 	tmpBuf := make([]byte, 1)
-	
+
 	//Create a slice of bytes to hold our output
 	var out []byte
 
@@ -151,19 +157,19 @@ func (b *BinaryReader) UTF8Null() string {
 		} else if n < 1 {
 			panic("UTF8Null: io.ReadFull didn't read any bytes!")
 		}
-		
+
 		//Break on NULL byte
-		if tmpBuf[0] == 0{
+		if tmpBuf[0] == 0 {
 			break
 		}
-		
+
 		//Append the byte
 		out = append(out, tmpBuf[0])
 	}
 	return string(out)
 }
 
-func (b *BinaryReader) UTF16Fixed(size int) string{
+func (b *BinaryReader) UTF16Fixed(size int) string {
 	return "UTF16Fixed is not implemented."
 }
 
